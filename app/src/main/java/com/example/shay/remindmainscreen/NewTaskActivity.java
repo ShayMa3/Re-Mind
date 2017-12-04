@@ -76,6 +76,9 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
         i.putExtra("description", desc);
         i.putExtra("date", date);
         setResult(Activity.RESULT_OK, i); //checks if there is data
+
+        //Make checkbox visible here
+
         finish();
     }
 
