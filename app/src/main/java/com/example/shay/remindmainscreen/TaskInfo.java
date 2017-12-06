@@ -7,10 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * Created by per6 on 11/7/17.
- */
-
 public class TaskInfo extends AppCompatActivity implements View.OnClickListener {
 
     private TextView taskName, taskDesc, taskDate;

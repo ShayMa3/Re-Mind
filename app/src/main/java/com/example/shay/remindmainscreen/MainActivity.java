@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayAdapter<Task> adapter;
     public static final String EXTRA_NAME = "REMIND";
     private List<CheckBox> checkBoxes;
-    private CheckBox check1, check2;
+    private CheckBox check0, check1, check2, check3, check4, check5, check6, check7, check8, check9, check10;
     //Variables to display the date
     private Calendar calendar;
     private SimpleDateFormat simpleDateFormat;
@@ -81,8 +82,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         upArrow = (ImageView) findViewById(R.id.up_arrow);
         taskList = (ListView) findViewById(R.id.listview_tasklist);
         yourTasks = (TextView) findViewById(R.id.text_your_tasks);
+        check0 = (CheckBox) findViewById(R.id.check_0);
         check1 = (CheckBox) findViewById(R.id.check_1);
         check2 = (CheckBox) findViewById(R.id.check_2);
+        check3 = (CheckBox) findViewById(R.id.check_3);
+        check4 = (CheckBox) findViewById(R.id.check_4);
+        check5 = (CheckBox) findViewById(R.id.check_5);
+        check6 = (CheckBox) findViewById(R.id.check_6);
+        check7 = (CheckBox) findViewById(R.id.check_7);
+        check8 = (CheckBox) findViewById(R.id.check_8);
+        check9 = (CheckBox) findViewById(R.id.check_9);
+        check10 = (CheckBox) findViewById(R.id.check_10);
+
 
     }
 
@@ -95,15 +106,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initTaskList() {
         /*tasks.add(new Task("Do hw", "do hw by five", "Nov 8"));
         tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
-        tasks.add(new Task("hehehe", "midnight", "Nov 9"));*/
+        tasks.add(new Task("hehehe", "midnight", "Nov 9"));*/ //test examples
 
     }
 
 
     private void initCheckBoxList() {
         checkBoxes= new ArrayList<>();
+        checkBoxes.add((CheckBox)findViewById(R.id.check_0));
         checkBoxes.add((CheckBox)findViewById(R.id.check_1));
         checkBoxes.add((CheckBox)findViewById(R.id.check_2));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_3));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_4));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_5));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_6));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_7));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_8));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_9));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_10));
+
     }
 
 
@@ -117,14 +138,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean checked = ((CheckBox) view).isChecked();
         // Check which checkbox was clicked
         switch(view.getId()) {
+            case R.id.check_0:
+                if (checked)
+                    //history.add(tasks.remove(0));
+                    Toast.makeText(this, "Checked!", Toast.LENGTH_LONG).show();
+                    //tasks.remove(0);
             case R.id.check_1:
                 if (checked)
-                    history.add(tasks.remove(0));
+                    history.add(tasks.remove(1));
                 break;
             case R.id.check_2:
                 if (checked)
-                    tasks.remove(1);
-                    history.add(tasks.remove(0));
+                    history.add(tasks.remove(2));
                 break;
         }
     }
@@ -162,6 +187,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //add a created task with the data from NewTaskActivity
                     tasks.add(new Task(data.getStringExtra("name"), data.getStringExtra("description"), data.getStringExtra("date")));
                     adapter.notifyDataSetChanged();
+                    //when tasks are added, set the corresponding checkbox to be visible
+                    for(int i = 0; i<tasks.size(); i++)
+                    {
+                        checkBoxes.get(i).setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }
