@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView headerText, dateText, quoteText, newTask, yourTasks;
     private ImageView upArrow;
     private float x1, x2, y1, y2;
+    private int streak, tasksLength;
     private List<Task> tasks, history;
     private ListView taskList;
     private ArrayAdapter<Task> adapter;
@@ -120,16 +121,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.check_1:
                 if (checked)
                     history.add(tasks.remove(0));
+                    updateStreak();
                 break;
             case R.id.check_2:
                 if (checked)
-                    tasks.remove(1);
-                    history.add(tasks.remove(0));
+                    history.add(tasks.remove(1));
+                    updateStreak();
                 break;
         }
     }
 
+    public void updateStreak() {
 
+    }
 
     public boolean onTouchEvent(MotionEvent touchevent) { //allows us to swipe up to get to NewTaskActivity
         switch (touchevent.getAction()) {
@@ -172,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
 
     }
+
+    protected void onStop(Bundle savedInstanceState) {
+
+    }
+
 
     //here's a comment
 
