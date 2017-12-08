@@ -172,6 +172,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    /**
+    how to save to user preferences??? Does this go in OnStop?
+    gson is a converter for arraylist to storable object
+    **/
+    public static void save_User_To_Shared_Prefs(Context context, User _USER) {
+    SharedPreferences appSharedPrefs = PreferenceManager
+            .getDefaultSharedPreferences(context.getApplicationContext());
+    SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+    Gson gson = new Gson();
+    String json = gson.toJson(_USER);
+    prefsEditor.putString("user", json);
+    prefsEditor.commit();
+    }
+    
+    /**
+    how to read from shared preferences
+    **/
+    public static User get_User_From_Shared_Prefs(Context context) {
+
+    SharedPreferences appSharedPrefs = PreferenceManager
+            .getDefaultSharedPreferences(context.getApplicationContext());
+    Gson gson = new Gson();
+    String json = appSharedPrefs.getString("user", "");
+
+
+    User user = gson.fromJson(json, User.class);
+    return user;
+    } 
+    
     @Override
     public void onClick(View view) {
 
