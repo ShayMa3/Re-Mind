@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView headerText, dateText, quoteText, newTask, yourTasks;
     private ImageView upArrow;
     private float x1, x2, y1, y2;
-    private int streak, lastDay, currentDay;
+    private int streak, lastDay, currentDay, lastHistorySize, lastStreakSize;
     private boolean firstTime;
     private List<Task> tasks, history;
     private ListView taskList;
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
         date = simpleDateFormat.format(calendar.getTime());
         dateText.setText(date);
+        currentDay = calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     public void wireWidgets(){
@@ -259,7 +260,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    public void updateStreak() {
+        if(lastHistorySize < history.size() && currentDay == lastDay + 1 && lastStreakSize == streak) {
+            streak++;
+        }
+    }
 
     public boolean onTouchEvent(MotionEvent touchevent) { //allows us to swipe up to get to NewTaskActivity
         switch (touchevent.getAction()) {
@@ -420,6 +425,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         saveHistoryToSharedPrefs(this, history);
         saveStreakToSharedPrefs(this, streak);
         saveTasksToSharedPrefs(this, tasks);
+
+        lastDay = calendar.get(Calendar.DAY_OF_YEAR);
+        lastHistorySize = history.size();
+        lastStreakSize = streak;
     }
 
 
