@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,16 +30,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayAdapter<Task> adapter;
     public static final String EXTRA_NAME = "REMIND";
     private List<CheckBox> checkBoxes;
-    private CheckBox check1, check2;
+    private CheckBox check0, check1, check2, check3, check4, check5, check6, check7;
     //Variables to display the date
     private Calendar calendar;
     private SimpleDateFormat simpleDateFormat;
     private String date;
 
-    //make custom constraint layout w/ checkbox and text
     //access database of quotes
     //fix date format for time picker popup
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +45,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        //wire widgets
         wireWidgets();
-        //initialize arrayList
+        //initialize arrayList w/ tasks and checkboxes
         tasks = new ArrayList<>();
-        initTaskList();
         initCheckBoxList();
+        //initialize arrayList w/ completed tasks
         initHistoryList();
-        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         //set the adapter to the listview
+        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         taskList.setAdapter(adapter);
         taskList.setOnItemClickListener(new ListView.OnItemClickListener() {
             //when clicked, each item will open main activity and show name, description, and date
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                Intent i = new Intent(MainActivity.this, TaskInfo.class); //send info to new activity
-                //get the object from the arraylist and put it in the extra for Intent
+                //send info to new activity
+                Intent i = new Intent(MainActivity.this, TaskInfo.class);
+                //get the object from the arrayList and put it in the extra for Intent
                 i.putExtra(EXTRA_NAME, tasks.get(pos));
                 startActivity(i);
             }
@@ -81,29 +81,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         upArrow = (ImageView) findViewById(R.id.up_arrow);
         taskList = (ListView) findViewById(R.id.listview_tasklist);
         yourTasks = (TextView) findViewById(R.id.text_your_tasks);
+        check0 = (CheckBox) findViewById(R.id.check_0);
         check1 = (CheckBox) findViewById(R.id.check_1);
         check2 = (CheckBox) findViewById(R.id.check_2);
-
+        check3 = (CheckBox) findViewById(R.id.check_3);
+        check4 = (CheckBox) findViewById(R.id.check_4);
+        check5 = (CheckBox) findViewById(R.id.check_5);
+        check6 = (CheckBox) findViewById(R.id.check_6);
+        check7 = (CheckBox) findViewById(R.id.check_7);
     }
 
-    public void setOnClickListeners(){
-        check1.setOnClickListener(this);
-        check2.setOnClickListener(this);
-    }
-
-
-    private void initTaskList() {
-        /*tasks.add(new Task("Do hw", "do hw by five", "Nov 8"));
+    /*private void initTaskList() {      //TESTING METHOD
+        tasks.add(new Task("Do hw", "do hw by five", "Nov 8"));
         tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
-        tasks.add(new Task("hehehe", "midnight", "Nov 9"));*/
-
-    }
-
+        tasks.add(new Task("hehehe", "midnight", "Nov 9"));
+    }*/
 
     private void initCheckBoxList() {
         checkBoxes= new ArrayList<>();
+        checkBoxes.add((CheckBox)findViewById(R.id.check_0));
         checkBoxes.add((CheckBox)findViewById(R.id.check_1));
         checkBoxes.add((CheckBox)findViewById(R.id.check_2));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_3));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_4));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_5));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_6));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_7));
     }
 
 
@@ -113,19 +116,121 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void onCheckboxClicked(View view) {
-        // Is the view now checked?
         boolean checked = ((CheckBox) view).isChecked();
         // Check which checkbox was clicked
         switch(view.getId()) {
+            case R.id.check_0:
+                if (checked)
+                    history.add(tasks.remove(0));
+                    adapter.notifyDataSetChanged();
+                    checkBoxes.get(checkBoxes.size()-1).setVisibility(View.GONE);
+                for(int i = checkBoxes.size()-1; i >= 0; i--) {
+                    if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                        checkBoxes.get(i).setVisibility(View.GONE);
+                        i=-1;
+                    }
+                }
+                check0.setChecked(false);
+                break;
+
             case R.id.check_1:
                 if (checked)
-                    history.add(tasks.remove(0));
+                    history.add(tasks.remove(1));
+                    adapter.notifyDataSetChanged();
+                    checkBoxes.get(checkBoxes.size()-1).setVisibility(View.GONE);
+                for(int i = checkBoxes.size()-1; i >= 0; i--) {
+                    if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                        checkBoxes.get(i).setVisibility(View.GONE);
+                        i=-1;
+                    }
+                }
+                check1.setChecked(false);
                 break;
+
             case R.id.check_2:
-                if (checked)
-                    tasks.remove(1);
-                    history.add(tasks.remove(0));
-                break;
+                if (checked) {
+                    history.add(tasks.remove(2));
+                    adapter.notifyDataSetChanged();
+                    for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                        if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                            checkBoxes.get(i).setVisibility(View.GONE);
+                            i = -1;
+                        }
+                    }
+                    check2.setChecked(false);
+                    break;
+
+                }
+
+            case R.id.check_3:
+                if(checked){
+                    history.add(tasks.remove(3));
+                    adapter.notifyDataSetChanged();
+                    for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                        if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                            checkBoxes.get(i).setVisibility(View.GONE);
+                            i = -1;
+                        }
+                    }
+                    check3.setChecked(false);
+                    break;
+                }
+
+            case R.id.check_4:
+                if(checked){
+                    history.add(tasks.remove(4));
+                    adapter.notifyDataSetChanged();
+                    for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                        if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                            checkBoxes.get(i).setVisibility(View.GONE);
+                            i = -1;
+                        }
+                    }
+                    check4.setChecked(false);
+                    break;
+                }
+
+            case R.id.check_5:
+                if(checked){
+                    history.add(tasks.remove(5));
+                    adapter.notifyDataSetChanged();
+                    for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                        if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                            checkBoxes.get(i).setVisibility(View.GONE);
+                            i = -1;
+                        }
+                    }
+                    check5.setChecked(false);
+                    break;
+                }
+
+            case R.id.check_6:
+                if(checked){
+                    history.add(tasks.remove(6));
+                    adapter.notifyDataSetChanged();
+                    for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                        if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                            checkBoxes.get(i).setVisibility(View.GONE);
+                            i = -1;
+                        }
+                    }
+                    check6.setChecked(false);
+                    break;
+                }
+
+            case R.id.check_7:
+                if(checked){
+                    history.add(tasks.remove(7));
+                    adapter.notifyDataSetChanged();
+                    for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                        if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                            checkBoxes.get(i).setVisibility(View.GONE);
+                            i = -1;
+                        }
+                    }
+                    check7.setChecked(false);
+                    break;
+                }
         }
     }
 
@@ -162,6 +267,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //add a created task with the data from NewTaskActivity
                     tasks.add(new Task(data.getStringExtra("name"), data.getStringExtra("description"), data.getStringExtra("date")));
                     adapter.notifyDataSetChanged();
+                    for(int i = 0; i<tasks.size(); i++)
+                    {
+                        checkBoxes.get(i).setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }

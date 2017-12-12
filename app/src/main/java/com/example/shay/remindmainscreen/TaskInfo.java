@@ -9,19 +9,21 @@ import android.widget.TextView;
 
 public class TaskInfo extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView taskName, taskDesc, taskDate;
+    private TextView taskName, taskDesc, taskDate, taskDetailSign, taskDoDateSign;
     private Button goHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taskinfo);
-        Intent i = getIntent(); //brings over info from main activity
+        //brings over info from main activity
+        Intent i = getIntent();
         Task thing = i.getParcelableExtra(MainActivity.EXTRA_NAME);
         wireWidgets();
         setOnClickListeners();
         Task clout = getIntent().getParcelableExtra(MainActivity.EXTRA_NAME);
-        //displays the text
+
+        //displays the text from a task
         taskName.setText(thing.getName());
         taskDesc.setText(thing.getDescription());
         taskDate.setText(thing.getDate());
@@ -36,6 +38,8 @@ public class TaskInfo extends AppCompatActivity implements View.OnClickListener 
         taskName = (TextView) findViewById(R.id.task_name);
         taskDate = (TextView) findViewById(R.id.task_date);
         goHome = (Button) findViewById(R.id.button_go_home);
+        taskDetailSign = (TextView) findViewById(R.id.text_descsign);
+        taskDoDateSign = (TextView) findViewById(R.id.text_dodatesign);
     }
 
     public void onClick(View view){
