@@ -1,7 +1,10 @@
 package com.example.shay.remindmainscreen;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView headerText, dateText, quoteText, newTask, yourTasks;
     private ImageView upArrow;
     private float x1, x2, y1, y2;
-    private int streak, tasksLength;
+    private int streak, lastDay, currentDay;
+    private boolean firstTime;
     private List<Task> tasks, history;
     private ListView taskList;
     private ArrayAdapter<Task> adapter;
@@ -48,11 +55,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //wire widgets
         wireWidgets();
-        //initialize arrayList
-        tasks = new ArrayList<>();
-        initTaskList();
-        initCheckBoxList();
-        initHistoryList();
+        setOnClickListeners();
+        //initialize arrayList for first time setup
+        if(getFirstTimeCheckFromSharedPrefs(this)==false) {
+            tasks = new ArrayList<>();
+            initCheckBoxList();
+            initHistoryList();
+            firstTime = true;
+            saveFirstTimeCheckToSharedPrefs(this, firstTime);
+        }
+        else {
+            checkBoxes = getCheckBoxesFromSharedPrefs(this);
+            history = getHistoryFromSharedPrefs(this);
+            streak = getStreakFromSharedPrefs(this);
+            tasks = getTasksFromSharedPrefs(this);
+        }
         adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         //set the adapter to the listview
         taskList.setAdapter(adapter);
@@ -91,15 +108,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         check1.setOnClickListener(this);
         check2.setOnClickListener(this);
     }
-
-
-    private void initTaskList() {
-        /*tasks.add(new Task("Do hw", "do hw by five", "Nov 8"));
-        tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
-        tasks.add(new Task("hehehe", "midnight", "Nov 9"));*/
-
-    }
-
 
     private void initCheckBoxList() {
         checkBoxes= new ArrayList<>();
@@ -172,42 +180,124 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //how to save and get arrayList to shared Pref, specifically current Task list
     /**
     how to save to user preferences??? Does this go in OnStop?
     gson is a converter for arraylist to storable object
+    ARE YOU PROUD THAT I CAN COMMENT LIKE THIS. IMA PRO
     **/
-    public static void save_User_To_Shared_Prefs(Context context, User _USER) {
+    public void saveTasksToSharedPrefs(Context context, List<Task> tasks) {
     SharedPreferences appSharedPrefs = PreferenceManager
             .getDefaultSharedPreferences(context.getApplicationContext());
     SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
     Gson gson = new Gson();
-    String json = gson.toJson(_USER);
-    prefsEditor.putString("user", json);
+    String json = gson.toJson(tasks);
+    prefsEditor.putString("currentTasks", json);
     prefsEditor.commit();
     }
-    
+
     /**
-    how to read from shared preferences
+    how to retrieve from shared preferences
     **/
-    public static User get_User_From_Shared_Prefs(Context context) {
+    public List<Task> getTasksFromSharedPrefs(Context context) {
 
     SharedPreferences appSharedPrefs = PreferenceManager
             .getDefaultSharedPreferences(context.getApplicationContext());
     Gson gson = new Gson();
-    String json = appSharedPrefs.getString("user", "");
+    String json = appSharedPrefs.getString("currentTasks", "");
+
+    tasks = gson.fromJson(json, new TypeToken<ArrayList<Task>>(){}.getType());
+    return tasks;
+    }
 
 
-    User user = gson.fromJson(json, User.class);
-    return user;
-    } 
-    
+    //saving and getting completed tasks
+    public void saveHistoryToSharedPrefs(Context context, List<Task> history) {
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(history);
+        prefsEditor.putString("completedTasks", json);
+        prefsEditor.commit();
+    }
+
+    public List<Task> getHistoryFromSharedPrefs(Context context) {
+
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        Gson gson = new Gson();
+        String json = appSharedPrefs.getString("completedTasks", "");
+        history = gson.fromJson(json, new TypeToken<ArrayList<Task>>(){}.getType());
+        return history;
+    }
+
+
+    //saving and getting completed tasks
+    public void saveCheckBoxesToSharedPrefs(Context context, List<CheckBox> checkBoxes) {
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(checkBoxes);
+        prefsEditor.putString("checkBoxes", json);
+        prefsEditor.commit();
+    }
+
+    public List<CheckBox> getCheckBoxesFromSharedPrefs(Context context) {
+
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        Gson gson = new Gson();
+        String json = appSharedPrefs.getString("checkBoxes", "");
+        checkBoxes = gson.fromJson(json, new TypeToken<ArrayList<CheckBox>>(){}.getType());
+        return checkBoxes;
+    }
+
+
+    //saving and getting streak number
+    public void saveStreakToSharedPrefs(Context context, int streak) {
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        prefsEditor.putInt("streak", streak);
+        prefsEditor.commit();
+    }
+
+    public int getStreakFromSharedPrefs(Context context) {
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        streak = appSharedPrefs.getInt("streak", streak);
+        return streak;
+    }
+
+
+    //saving and getting first time setup
+    public void saveFirstTimeCheckToSharedPrefs(Context context, boolean firstTime) {
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        prefsEditor.putBoolean("firstTime", firstTime);
+        prefsEditor.commit();
+    }
+
+    public boolean getFirstTimeCheckFromSharedPrefs(Context context) {
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        firstTime = appSharedPrefs.getBoolean("firstTime",firstTime);
+        return firstTime;
+    }
+
     @Override
     public void onClick(View view) {
 
     }
 
-    protected void onStop(Bundle savedInstanceState) {
-
+    protected void onPause(Bundle savedInstanceState) {
+        saveCheckBoxesToSharedPrefs(this, checkBoxes);
+        saveHistoryToSharedPrefs(this, history);
+        saveStreakToSharedPrefs(this, streak);
+        saveTasksToSharedPrefs(this, tasks);
     }
 
 
