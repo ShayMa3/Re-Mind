@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView headerText, dateText, quoteText, newTask, yourTasks;
     private ImageView upArrow;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SimpleDateFormat simpleDateFormat;
     private String date;
 
+    //access database of quotes
+    //fix date format for time picker popup
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,28 +52,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        wireWidgets();
+        setOnClickListeners();
         //initialize arrayList for first time setup
-        if(getFirstTimeCheckFromSharedPrefs(this)==false) {
+        if (getFirstTimeCheckFromSharedPrefs(this) == false) {
             tasks = new ArrayList<>();
+            tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
             initCheckBoxList();
             initHistoryList();
             firstTime = true;
             saveFirstTimeCheckToSharedPrefs(this, firstTime);
-        }
-        else {
+        } else {
             checkBoxes = getCheckBoxesFromSharedPrefs(this);
             history = getHistoryFromSharedPrefs(this);
             streak = getStreakFromSharedPrefs(this);
             tasks = getTasksFromSharedPrefs(this);
+            if (tasks == null)
+                tasks = new ArrayList<>();
         }
-
-        wireWidgets();
+        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         //set the adapter to the listview
-        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
-        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         taskList.setAdapter(adapter);
         taskList.setOnItemClickListener(new ListView.OnItemClickListener() {
-            //when clicked, each task will open main activity and show name, description, and date
+            //when clicked, each item will open main activity and show name, description, and date
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 //send info to new activity
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         currentDay = calendar.get(Calendar.DAY_OF_YEAR);
     }
 
-    public void wireWidgets(){
+    public void wireWidgets() {
         headerText = (TextView) findViewById(R.id.text_header);
         dateText = (TextView) findViewById(R.id.text_date);
         quoteText = (TextView) findViewById(R.id.text_quote);
@@ -107,16 +111,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         check7 = (CheckBox) findViewById(R.id.check_7);
     }
 
+    public void setOnClickListeners() {
+        check1.setOnClickListener(this);
+        check2.setOnClickListener(this);
+    }
+
+
+    private void initTaskList() {
+        /*tasks.add(new Task("Do hw", "do hw by five", "Nov 8"));
+        tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
+        tasks.add(new Task("hehehe", "midnight", "Nov 9"));*/
+
+    }
+
+
     private void initCheckBoxList() {
-        checkBoxes= new ArrayList<>();
-        checkBoxes.add((CheckBox)findViewById(R.id.check_0));
-        checkBoxes.add((CheckBox)findViewById(R.id.check_1));
-        checkBoxes.add((CheckBox)findViewById(R.id.check_2));
-        checkBoxes.add((CheckBox)findViewById(R.id.check_3));
-        checkBoxes.add((CheckBox)findViewById(R.id.check_4));
-        checkBoxes.add((CheckBox)findViewById(R.id.check_5));
-        checkBoxes.add((CheckBox)findViewById(R.id.check_6));
-        checkBoxes.add((CheckBox)findViewById(R.id.check_7));
+        checkBoxes = new ArrayList<>();
+        checkBoxes.add((CheckBox) findViewById(R.id.check_0));
+        checkBoxes.add((CheckBox) findViewById(R.id.check_1));
+        checkBoxes.add((CheckBox) findViewById(R.id.check_2));
+        checkBoxes.add((CheckBox) findViewById(R.id.check_3));
+        checkBoxes.add((CheckBox) findViewById(R.id.check_4));
+        checkBoxes.add((CheckBox) findViewById(R.id.check_5));
+        checkBoxes.add((CheckBox) findViewById(R.id.check_6));
+        checkBoxes.add((CheckBox) findViewById(R.id.check_7));
     }
 
 
@@ -128,16 +146,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         // Check which checkbox was clicked
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.check_0:
                 if (checked)
                     history.add(tasks.remove(0));
-                    adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size()-1).setVisibility(View.GONE);
-                for(int i = checkBoxes.size()-1; i >= 0; i--) {
+                adapter.notifyDataSetChanged();
+                checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
+                for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                     if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
                         checkBoxes.get(i).setVisibility(View.GONE);
-                        i=-1;
+                        i = -1;
                     }
                 }
                 check0.setChecked(false);
@@ -146,12 +164,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.check_1:
                 if (checked)
                     history.add(tasks.remove(1));
-                    adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size()-1).setVisibility(View.GONE);
-                for(int i = checkBoxes.size()-1; i >= 0; i--) {
+                adapter.notifyDataSetChanged();
+                checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
+                for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                     if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
                         checkBoxes.get(i).setVisibility(View.GONE);
-                        i=-1;
+                        i = -1;
                     }
                 }
                 check1.setChecked(false);
@@ -173,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             case R.id.check_3:
-                if(checked){
+                if (checked) {
                     history.add(tasks.remove(3));
                     adapter.notifyDataSetChanged();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
@@ -187,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             case R.id.check_4:
-                if(checked){
+                if (checked) {
                     history.add(tasks.remove(4));
                     adapter.notifyDataSetChanged();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
@@ -201,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             case R.id.check_5:
-                if(checked){
+                if (checked) {
                     history.add(tasks.remove(5));
                     adapter.notifyDataSetChanged();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
@@ -215,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             case R.id.check_6:
-                if(checked){
+                if (checked) {
                     history.add(tasks.remove(6));
                     adapter.notifyDataSetChanged();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
@@ -229,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             case R.id.check_7:
-                if(checked){
+                if (checked) {
                     history.add(tasks.remove(7));
                     adapter.notifyDataSetChanged();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
@@ -245,14 +263,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void updateStreak() {
-        if(lastHistorySize < history.size() && currentDay == lastDay + 1 && lastStreakSize == streak) {
+        if (lastHistorySize < history.size() && currentDay == lastDay + 1 && lastStreakSize == streak) {
             streak++;
+        }
+        else if(currentDay > lastDay + 1) {
+            streak = 0;
         }
     }
 
     public boolean onTouchEvent(MotionEvent touchevent) { //allows us to swipe up to get to NewTaskActivity
         switch (touchevent.getAction()) {
-            case MotionEvent.ACTION_DOWN:{
+            case MotionEvent.ACTION_DOWN: {
                 x1 = touchevent.getX();
                 y1 = touchevent.getY();
                 break;
@@ -275,14 +296,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode){
-            case 1:{ //number 1 to show that it's from NewTaskActivity
-                if(resultCode == RESULT_OK){
+        switch (requestCode) {
+            case 1: { //number 1 to show that it's from NewTaskActivity
+                if (resultCode == RESULT_OK) {
                     //add a created task with the data from NewTaskActivity
                     tasks.add(new Task(data.getStringExtra("name"), data.getStringExtra("description"), data.getStringExtra("date")));
                     adapter.notifyDataSetChanged();
-                    for(int i = 0; i<tasks.size(); i++)
-                    {
+                    for (int i = 0; i < tasks.size(); i++) {
                         checkBoxes.get(i).setVisibility(View.VISIBLE);
                     }
                 }
@@ -291,42 +311,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
-
-
-
-
-
-
-
     //how to save and get arrayList to shared Pref, specifically current Task list
+
     /**
-    how to save to user preferences??? Does this go in OnStop?
-    gson is a converter for arraylist to storable object
-    ARE YOU PROUD THAT I CAN COMMENT LIKE THIS. IMA PRO
-    **/
+     * how to save to user preferences??? Does this go in OnStop?
+     * gson is a converter for arraylist to storable object
+     * ARE YOU PROUD THAT I CAN COMMENT LIKE THIS. IMA PRO
+     **/
     public void saveTasksToSharedPrefs(Context context, List<Task> tasks) {
-    SharedPreferences appSharedPrefs = PreferenceManager
-            .getDefaultSharedPreferences(context.getApplicationContext());
-    SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-    Gson gson = new Gson();
-    String json = gson.toJson(tasks);
-    prefsEditor.putString("currentTasks", json);
-    prefsEditor.commit();
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(tasks);
+        prefsEditor.putString("currentTasks", json);
+        prefsEditor.commit();
     }
 
     /**
-    how to retrieve from shared preferences
-    **/
+     * how to retrieve from shared preferences
+     **/
     public List<Task> getTasksFromSharedPrefs(Context context) {
 
-    SharedPreferences appSharedPrefs = PreferenceManager
-            .getDefaultSharedPreferences(context.getApplicationContext());
-    Gson gson = new Gson();
-    String json = appSharedPrefs.getString("currentTasks", "");
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        Gson gson = new Gson();
+        String json = appSharedPrefs.getString("currentTasks", "");
 
-    tasks = gson.fromJson(json, new TypeToken<ArrayList<Task>>(){}.getType());
-    return tasks;
+        tasks = gson.fromJson(json, new TypeToken<ArrayList<Task>>() {
+        }.getType());
+    Log.d("hi", "getTasksFromSharedPrefs: tasks= " + tasks);
+        return tasks;
     }
 
 
@@ -347,7 +362,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getDefaultSharedPreferences(context.getApplicationContext());
         Gson gson = new Gson();
         String json = appSharedPrefs.getString("completedTasks", "");
-        history = gson.fromJson(json, new TypeToken<ArrayList<Task>>(){}.getType());
+        history = gson.fromJson(json, new TypeToken<ArrayList<Task>>() {
+        }.getType());
+        Log.d("hello", "getHistoryFromSharedPrefs: history= " + history);
         return history;
     }
 
@@ -369,7 +386,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getDefaultSharedPreferences(context.getApplicationContext());
         Gson gson = new Gson();
         String json = appSharedPrefs.getString("checkBoxes", "");
-        checkBoxes = gson.fromJson(json, new TypeToken<ArrayList<CheckBox>>(){}.getType());
+        checkBoxes = gson.fromJson(json, new TypeToken<ArrayList<CheckBox>>() {
+        }.getType());
+        Log.d("yo", "getCheckBoxesFromSharedPrefs: checkBoxes= " + checkBoxes);
+        if(checkBoxes == null) {
+            checkBoxes= new ArrayList<>();
+            checkBoxes.add((CheckBox)findViewById(R.id.check_0));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_1));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_2));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_3));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_4));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_5));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_6));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_7));
+        }
         return checkBoxes;
     }
 
@@ -403,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean getFirstTimeCheckFromSharedPrefs(Context context) {
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
-        firstTime = appSharedPrefs.getBoolean("firstTime",firstTime);
+        firstTime = appSharedPrefs.getBoolean("firstTime", firstTime);
         return firstTime;
     }
 
@@ -422,9 +452,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lastHistorySize = history.size();
         lastStreakSize = streak;
     }
+
 }
-
-
 
 
 
