@@ -17,9 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".NewTaskActivity" />
-        <activity android:name=".ReminderActivity"></activity>
+        <activity android:name=".ReminderActivity" />
         <activity android:name=".TaskInfo" />
-
+        <activity android:name=".History"></activity>
     </application>
 
 </manifest>

@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SimpleDateFormat simpleDateFormat;
     private String date;
 
-    //access database of quotes
-    //fix date format for time picker popup
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        wireWidgets();
-        setOnClickListeners();
         //initialize arrayList for first time setup
         if(getFirstTimeCheckFromSharedPrefs(this)==false) {
             tasks = new ArrayList<>();
@@ -67,12 +63,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             streak = getStreakFromSharedPrefs(this);
             tasks = getTasksFromSharedPrefs(this);
         }
-        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
+
+        wireWidgets();
         //set the adapter to the listview
+        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         taskList.setAdapter(adapter);
         taskList.setOnItemClickListener(new ListView.OnItemClickListener() {
-            //when clicked, each item will open main activity and show name, description, and date
+            //when clicked, each task will open main activity and show name, description, and date
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 //send info to new activity
@@ -108,20 +106,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         check6 = (CheckBox) findViewById(R.id.check_6);
         check7 = (CheckBox) findViewById(R.id.check_7);
     }
-
-    public void setOnClickListeners(){
-        check1.setOnClickListener(this);
-        check2.setOnClickListener(this);
-    }
-
-
-    private void initTaskList() {
-        /*tasks.add(new Task("Do hw", "do hw by five", "Nov 8"));
-        tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
-        tasks.add(new Task("hehehe", "midnight", "Nov 9"));*/
-
-    }
-
 
     private void initCheckBoxList() {
         checkBoxes= new ArrayList<>();
@@ -307,6 +291,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+
+
+
+
+
+
+
     //how to save and get arrayList to shared Pref, specifically current Task list
     /**
     how to save to user preferences??? Does this go in OnStop?
@@ -430,8 +422,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lastHistorySize = history.size();
         lastStreakSize = streak;
     }
-
-
-    //here's a comment
-
 }
+
+
+
+
+
+
