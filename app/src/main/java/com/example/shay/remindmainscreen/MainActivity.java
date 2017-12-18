@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //initialize arrayList for first time setup
         if(getFirstTimeCheckFromSharedPrefs(this)==false) {
             tasks = new ArrayList<>();
+            tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
             initCheckBoxList();
             initHistoryList();
             firstTime = true;
@@ -66,11 +68,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             history = getHistoryFromSharedPrefs(this);
             streak = getStreakFromSharedPrefs(this);
             tasks = getTasksFromSharedPrefs(this);
+            if(tasks == null)
+                tasks = new ArrayList<>();
         }
+        Log.d("tasklist", "onCreate: taskList = " + taskList);
         adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
+        adapter.addAll(tasks);
         //set the adapter to the listview
-        adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
         taskList.setAdapter(adapter);
+        Log.d("sean!", "onCreate: adapter= " + adapter);
         taskList.setOnItemClickListener(new ListView.OnItemClickListener() {
             //when clicked, each item will open main activity and show name, description, and date
             @Override
@@ -264,6 +270,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(lastHistorySize < history.size() && currentDay == lastDay + 1 && lastStreakSize == streak) {
             streak++;
         }
+        else if(currentDay > lastDay + 1) {
+            streak = 0;
+        }
     }
 
     public boolean onTouchEvent(MotionEvent touchevent) { //allows us to swipe up to get to NewTaskActivity
@@ -334,6 +343,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String json = appSharedPrefs.getString("currentTasks", "");
 
     tasks = gson.fromJson(json, new TypeToken<ArrayList<Task>>(){}.getType());
+    Log.d("hi", "getTasksFromSharedPrefs: tasks= " + tasks);
     return tasks;
     }
 
@@ -356,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Gson gson = new Gson();
         String json = appSharedPrefs.getString("completedTasks", "");
         history = gson.fromJson(json, new TypeToken<ArrayList<Task>>(){}.getType());
+        Log.d("hello", "getHistoryFromSharedPrefs: history= " + history);
         return history;
     }
 
@@ -378,6 +389,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Gson gson = new Gson();
         String json = appSharedPrefs.getString("checkBoxes", "");
         checkBoxes = gson.fromJson(json, new TypeToken<ArrayList<CheckBox>>(){}.getType());
+        Log.d("yo", "getCheckBoxesFromSharedPrefs: checkBoxes= " + checkBoxes);
+        if(checkBoxes == null) {
+            checkBoxes= new ArrayList<>();
+            checkBoxes.add((CheckBox)findViewById(R.id.check_0));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_1));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_2));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_3));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_4));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_5));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_6));
+            checkBoxes.add((CheckBox)findViewById(R.id.check_7));
+        }
         return checkBoxes;
     }
 
@@ -395,6 +418,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
         streak = appSharedPrefs.getInt("streak", streak);
+        Log.d("yolo", "getStreakFromSharedPrefs: ");
         return streak;
     }
 
@@ -412,6 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
         firstTime = appSharedPrefs.getBoolean("firstTime",firstTime);
+        Log.d("yolo swag", "getFirstTimeCheckFromSharedPrefs: ");
         return firstTime;
     }
 
