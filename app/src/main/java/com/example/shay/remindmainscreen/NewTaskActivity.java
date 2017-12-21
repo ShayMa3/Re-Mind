@@ -1,23 +1,13 @@
 package com.example.shay.remindmainscreen;
 
 import android.app.Activity;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.TimePicker;
-
-import java.util.Calendar;
 
 public class NewTaskActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -55,7 +45,6 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
         switch(view.getId()){
             case R.id.button_submit:
                 createTask();
-
                 break;
             case R.id.button_reminder:
                 Intent j = new Intent(NewTaskActivity.this, ReminderActivity.class);

@@ -12,6 +12,25 @@ public class Task implements Parcelable {
     private String description;
     private String date;
     private String availability;
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
+    }
+
+    private boolean isDone;
+
+    public Task(String name, String description, String date, String availability, boolean isDone) {
+        this.name = name;
+        this.description = description;
+        this.date = date;
+        this.availability = availability;
+        this.isDone = isDone;
+    }
+
     private boolean star;
     private boolean habit;
 
@@ -83,39 +102,41 @@ public class Task implements Parcelable {
     }
 
     protected Task(Parcel in) {
-        name = in.readString();
-        description = in.readString();
-        date = in.readString();
-        availability = in.readString();
-        star = in.readByte() != 0x00;
-        habit = in.readByte() != 0x00;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(description);
-        dest.writeString(date);
-        dest.writeString(availability);
-        dest.writeByte((byte) (star ? 0x01 : 0x00));
-        dest.writeByte((byte) (habit ? 0x01 : 0x00));
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel in) {
-            return new Task(in);
+            name = in.readString();
+            description = in.readString();
+            date = in.readString();
+            availability = in.readString();
+            isDone = in.readByte() != 0x00;
+            star = in.readByte() != 0x00;
+            habit = in.readByte() != 0x00;
         }
 
         @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
+        public int describeContents() {
+            return 0;
         }
-    };
-}
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(name);
+            dest.writeString(description);
+            dest.writeString(date);
+            dest.writeString(availability);
+            dest.writeByte((byte) (isDone ? 0x01 : 0x00));
+            dest.writeByte((byte) (star ? 0x01 : 0x00));
+            dest.writeByte((byte) (habit ? 0x01 : 0x00));
+        }
+
+        @SuppressWarnings("unused")
+        public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
+            @Override
+            public Task createFromParcel(Parcel in) {
+                return new Task(in);
+            }
+
+            @Override
+            public Task[] newArray(int size) {
+                return new Task[size];
+            }
+        };
+    }
