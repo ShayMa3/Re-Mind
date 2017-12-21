@@ -8,15 +8,15 @@
 
     <TextView
         android:id="@+id/task_name"
-        android:layout_width="297dp"
-        android:layout_height="109dp"
+        android:layout_width="331dp"
+        android:layout_height="120dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Name"
         android:textAlignment="center"
-        android:textSize="50sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"

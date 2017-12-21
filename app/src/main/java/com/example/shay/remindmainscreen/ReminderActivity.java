@@ -29,6 +29,7 @@ public class ReminderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
         wireWidgets();
+        //submitReminder.setOnClickListener(this);
     }
 
     public void wireWidgets(){
@@ -77,8 +78,8 @@ public class ReminderActivity extends AppCompatActivity {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notificationicon1)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setContentTitle("Re-Mind")
+                        .setContentText("You have a notification!");
 
         Intent intent = new Intent(ReminderActivity.this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);

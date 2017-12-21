@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String EXTRA_NAME = "REMIND";
     private List<CheckBox> checkBoxes;
     private CheckBox check0, check1, check2, check3, check4, check5, check6, check7;
+    private Button historyButton;
     //Variables to display the date
     private Calendar calendar;
     private SimpleDateFormat simpleDateFormat;
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         wireWidgets();
-        setOnClickListeners();
+        historyButton.setOnClickListener(this);
         //initialize arrayList for first time setup
 
 
@@ -128,10 +130,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
     }
 
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.button_history:
+                //Intent i = new Intent(MainActivity.this, History.class);
+                Intent i = new Intent(MainActivity.this, History.class);
+                i.putExtra("history", (ArrayList<Task>) history);
+                i.putExtra("tasks", (ArrayList<Task>) tasks);
+                startActivity(i);
+                break;
+        }
+    }
+
     public void wireWidgets() {
         headerText = (TextView) findViewById(R.id.text_header);
         dateText = (TextView) findViewById(R.id.text_date);
-        quoteText = (TextView) findViewById(R.id.text_quote);
         newTaskLine = (TextView) findViewById(R.id.new_task);
         upArrow = (ImageView) findViewById(R.id.up_arrow);
         taskList = (ListView) findViewById(R.id.listview_tasklist);
@@ -144,19 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         check5 = (CheckBox) findViewById(R.id.check_5);
         check6 = (CheckBox) findViewById(R.id.check_6);
         check7 = (CheckBox) findViewById(R.id.check_7);
-    }
-
-    public void setOnClickListeners() {
-        check1.setOnClickListener(this);
-        check2.setOnClickListener(this);
-    }
-
-
-    private void initTaskList() {
-        /*tasks.add(new Task("Do hw", "do hw by five", "Nov 8"));
-        tasks.add(new Task("Do dishes", "do dishes by six", "Nov 20"));
-        tasks.add(new Task("hehehe", "midnight", "Nov 9"));*/
-
+        historyButton = (Button) findViewById(R.id.button_history);
     }
 
 
@@ -186,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (checked)
                     history.add(tasks.remove(0));
                 adapter.notifyDataSetChanged();
-                checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                 updateStreak();
                 for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                     if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
@@ -201,27 +202,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (checked) {
                     history.add(tasks.remove(1));
                     adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                     updateStreak();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
-                        adapter.notifyDataSetChanged();
-                        checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
-                        for (int i = checkBoxes.size() - 1; i >= 0; i--) {
-                            if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
-                                checkBoxes.get(i).setVisibility(View.GONE);
-                                i = -1;
+                        if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                            checkBoxes.get(i).setVisibility(View.GONE);
+                            i = -1;
                             }
                         }
                         check1.setChecked(false);
                         break;
                     }
-                }
 
             case R.id.check_2:
                 if (checked) {
                     history.add(tasks.remove(2));
                     adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                     updateStreak();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                         if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
@@ -238,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (checked) {
                     history.add(tasks.remove(3));
                     adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                     updateStreak();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                         if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
@@ -254,7 +248,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (checked) {
                     history.add(tasks.remove(4));
                     adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                     updateStreak();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                         if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
@@ -270,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (checked) {
                     history.add(tasks.remove(5));
                     adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                     updateStreak();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                         if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
@@ -286,7 +278,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (checked) {
                     history.add(tasks.remove(6));
                     adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                     updateStreak();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                         if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
@@ -302,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (checked) {
                     history.add(tasks.remove(7));
                     adapter.notifyDataSetChanged();
-                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
                     updateStreak();
                     for (int i = checkBoxes.size() - 1; i >= 0; i--) {
                         if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
@@ -313,7 +303,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     check7.setChecked(false);
                     break;
                 }
-
         }
     }
 
@@ -337,9 +326,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 x2 = touchevent.getX();
                 y2 = touchevent.getY();
                 if (y1 > y2) {
-                    //Toast.makeText(this, "Down to Up Swap Performed", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(MainActivity.this, NewTaskActivity.class);
-                    //startActivity(i);
                     startActivityForResult(i, 1);
                 }
                 break;
@@ -377,11 +364,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //how to save and get arrayList to shared Pref, specifically current Task list
 
     /**
-    how to save to user preferences??? Does this go in OnStop?
-    gson is a converter for arraylist to storable object
-    ARE YOU PROUD THAT I CAN COMMENT LIKE THIS. IMA PRO
-    **/
-    public void saveTasksToSharedPrefs(Context context, List<Task> tasks) {
+     * how to save to user preferences??? Does this go in OnStop?
+     * gson is a converter for arraylist to storable object
+     * ARE YOU PROUD THAT I CAN COMMENT LIKE THIS. IMA PRO
+     **/
+    public void saveTasksToSharedPrefs(Context context) {
     SharedPreferences appSharedPrefs = PreferenceManager
             .getDefaultSharedPreferences(context.getApplicationContext());
     SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
@@ -432,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     //saving and getting completed tasks
-    public void saveCheckBoxesToSharedPrefs(Context context, List<CheckBox> checkBoxes) {
+    public void saveCheckBoxesToSharedPrefs(Context context) {
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
@@ -511,11 +498,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         firstTime = appSharedPrefs.getBoolean("firstTime",firstTime);
         Log.d("yolo swag", "getFirstTimeCheckFromSharedPrefs: ");
         return firstTime;
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 
     @Override
