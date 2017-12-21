@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "taskList activity";
     private TextView headerText, dateText, quoteText, newTaskLine, yourTasks;
@@ -198,19 +198,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.check_1:
-                if (checked)
+                if (checked) {
                     history.add(tasks.remove(1));
-                adapter.notifyDataSetChanged();
-                checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
-                updateStreak();
-                for (int i = checkBoxes.size() - 1; i >= 0; i--) {
-                    if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
-                        checkBoxes.get(i).setVisibility(View.GONE);
-                        i = -1;
+                    adapter.notifyDataSetChanged();
+                    checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
+                    updateStreak();
+                    for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                        adapter.notifyDataSetChanged();
+                        checkBoxes.get(checkBoxes.size() - 1).setVisibility(View.GONE);
+                        for (int i = checkBoxes.size() - 1; i >= 0; i--) {
+                            if (checkBoxes.get(i).getVisibility() == View.VISIBLE) {
+                                checkBoxes.get(i).setVisibility(View.GONE);
+                                i = -1;
+                            }
+                        }
+                        check1.setChecked(false);
+                        break;
                     }
                 }
-                check1.setChecked(false);
-                break;
 
             case R.id.check_2:
                 if (checked) {
@@ -372,19 +377,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //how to save and get arrayList to shared Pref, specifically current Task list
 
     /**
-     * how to save to user preferences??? Does this go in OnStop?
-     * gson is a converter for arraylist to storable object
-     * ARE YOU PROUD THAT I CAN COMMENT LIKE THIS. IMA PRO
-     **/
-    public void saveTasksToSharedPrefs(Context context) {
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(context.getApplicationContext());
-        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(tasks);
-        Log.d("json2", "saveTasksToSharedPrefs: " + json);
-        prefsEditor.putString("currentTasks", json);
-        prefsEditor.commit();
+    how to save to user preferences??? Does this go in OnStop?
+    gson is a converter for arraylist to storable object
+    ARE YOU PROUD THAT I CAN COMMENT LIKE THIS. IMA PRO
+    **/
+    public void saveTasksToSharedPrefs(Context context, List<Task> tasks) {
+    SharedPreferences appSharedPrefs = PreferenceManager
+            .getDefaultSharedPreferences(context.getApplicationContext());
+    SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+    Gson gson = new Gson();
+    String json = gson.toJson(tasks);
+    prefsEditor.putString("currentTasks", json);
+    prefsEditor.commit();
     }
 
     /**
@@ -392,15 +396,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      **/
     public List<Task> getTasksFromSharedPrefs(Context context) {
 
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(context.getApplicationContext());
-        Gson gson = new Gson();
-        String json = appSharedPrefs.getString("currentTasks", "");
-        Log.d("JSON", "getTasksFromSharedPrefs: " + json);
-        tasks = gson.fromJson(json, new TypeToken<ArrayList<Task>>() {
-        }.getType());
-        Log.d("hi", "getTasksFromSharedPrefs: tasks= " + tasks);
-        return tasks;
+    SharedPreferences appSharedPrefs = PreferenceManager
+            .getDefaultSharedPreferences(context.getApplicationContext());
+    Gson gson = new Gson();
+    String json = appSharedPrefs.getString("currentTasks", "");
+
+    tasks = gson.fromJson(json, new TypeToken<ArrayList<Task>>(){}.getType());
+    Log.d("hi", "getTasksFromSharedPrefs: tasks= " + tasks);
+    return tasks;
     }
 
 
@@ -489,7 +492,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
         streak = appSharedPrefs.getInt("streak", streak);
-        Log.d("yolo", "getStreakFromSharedPrefs: ");
         return streak;
     }
 
@@ -506,7 +508,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean getFirstTimeCheckFromSharedPrefs(Context context) {
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
-        firstTime = appSharedPrefs.getBoolean("firstTime", firstTime);
+        firstTime = appSharedPrefs.getBoolean("firstTime",firstTime);
         Log.d("yolo swag", "getFirstTimeCheckFromSharedPrefs: ");
         return firstTime;
     }
@@ -528,8 +530,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lastStreakSize = streak;
         super.onPause();
     }
-
-
     //here's a comment
-
 }
+
+
+
+
