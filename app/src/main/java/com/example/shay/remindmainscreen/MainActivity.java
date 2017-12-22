@@ -73,8 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
 //        if (getFirstTimeCheckFromSharedPrefs(this) == false) {
-//            tasks = new ArrayList<>();
-//            tasks.add(new Task("Your first task!", "Change this task to complete your first task!", "01/01"));
 //            initCheckBoxList();
 //            initHistoryList();
 //            firstTime = true;
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "onResume: " + tasks);
             if (tasks == null) {
                 tasks = new ArrayList<>();
-                tasks.add(new Task("Your first task!", "Change this task to complete your first task!", "01/01"));
+                tasks.add(new Task("Your first task!", "Check this task to complete your first task!", "01/01/18"));
                 checkBoxes.get(0).setVisibility(View.VISIBLE);
             }
 

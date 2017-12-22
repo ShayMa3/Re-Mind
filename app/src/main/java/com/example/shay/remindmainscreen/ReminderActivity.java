@@ -22,6 +22,7 @@ public class ReminderActivity extends AppCompatActivity {
     private TimePicker timePickerDialog;
     private DatePicker calendarDate;
     private Button submitReminder;
+    private String reminderName;
 
 
     @Override
@@ -30,6 +31,10 @@ public class ReminderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reminder);
         wireWidgets();
         //submitReminder.setOnClickListener(this);
+
+        Intent i = getIntent();
+        //Task thing = i.getParcelableExtra(MainActivity.EXTRA_NAME);
+        //reminderName = thing.getName();
     }
 
     public void wireWidgets(){
@@ -79,7 +84,7 @@ public class ReminderActivity extends AppCompatActivity {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notificationicon1)
                         .setContentTitle("Re-Mind")
-                        .setContentText("You have a notification!");
+                        .setContentText("Complete your task!");
 
         Intent intent = new Intent(ReminderActivity.this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);

@@ -46,11 +46,11 @@ public class History extends AppCompatActivity implements View.OnClickListener {
                 data.putExtra("history!", removedHistory);
             }
         });
+        backButton.setOnClickListener(this);
     }
 
     public void wireWidgets(){
         backButton = (Button) findViewById(R.id.button_back);
-        backButton.setOnClickListener(this);
         instructionsText = (TextView) findViewById(R.id.text_instructions);
         historyHeaderText = (TextView) findViewById(R.id.text_history_header);
         historyView = (ListView) findViewById(R.id.history_list_view);
