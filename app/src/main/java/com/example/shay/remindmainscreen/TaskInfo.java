@@ -10,7 +10,7 @@ import android.widget.TextView;
 public class TaskInfo extends AppCompatActivity implements View.OnClickListener {
 
     private TextView taskName, taskDesc, taskDate, taskDetailSign, taskDoDateSign;
-    private Button goHome;
+    private Button goHome, editTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public class TaskInfo extends AppCompatActivity implements View.OnClickListener 
         taskName = (TextView) findViewById(R.id.task_name);
         taskDate = (TextView) findViewById(R.id.task_date);
         goHome = (Button) findViewById(R.id.button_go_home);
+        editTask = (Button) findViewById(R.id.button_edit_task);
         taskDetailSign = (TextView) findViewById(R.id.text_descsign);
         taskDoDateSign = (TextView) findViewById(R.id.text_dodatesign);
     }

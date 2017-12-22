@@ -14,17 +14,20 @@ import android.widget.TextView;
 
 public class EditTaskActivity extends NewTaskActivity {
     private TextView newHeaderText;
-    private Button submitButton, reminderButton ;
+    private Button reminderButton, saveButton;
     private EditText taskNameEditText, taskDetailsEditText, doDateEditText;
     private int doDate;
     private boolean completed;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        wireWidgets();
     }
 
+    @Override
     public void wireWidgets(){
         super.wireWidgets();
+        saveButton = (Button) findViewById(R.id.button_save);
     }
 
     public void setOnClickListeners(){
