@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,8 @@ public class History extends AppCompatActivity implements View.OnClickListener {
     private Button backButton;
     private ArrayAdapter<Task> historyAdapter;
     private TextView instructionsText, historyHeaderText;
-    private List<Task> tasks, history;
+    private ArrayList <Task> tasks, history, removedHistory;
+    private Intent data;
 
 
     @Override
@@ -32,15 +34,16 @@ public class History extends AppCompatActivity implements View.OnClickListener {
 
         tasks = getIntent().getParcelableArrayListExtra("tasks");
         history = getIntent().getParcelableArrayListExtra("history");
-        history.add(new Task("Hello", "Your", "Task"));
-        tasks.add(new Task("Hello", "Your", "Task"));
         historyAdapter = new ArrayAdapter<Task>(this, android.R.layout.simple_list_item_1, history);
         historyView.setAdapter(historyAdapter);
+        data = new Intent(History.this, MainActivity.class);
+        removedHistory = new ArrayList<>();
         historyView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                tasks.add(history.remove(pos));
+                removedHistory.add(history.remove(pos));
                 historyAdapter.notifyDataSetChanged();
+                data.putExtra("history!", removedHistory);
             }
         });
     }
@@ -57,8 +60,8 @@ public class History extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.button_back:
-                Intent i = new Intent(History.this, MainActivity.class);
-                startActivity(i);
+                setResult(RESULT_OK, data);
+                finish();
                 break;
         }
     }

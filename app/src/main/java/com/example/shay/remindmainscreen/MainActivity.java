@@ -29,12 +29,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "taskList activity";
+    private static final int HISTORY_REQUEST = 2;
     private TextView headerText, dateText, quoteText, newTaskLine, yourTasks;
     private ImageView upArrow;
     private float x1, x2, y1, y2;
     private int streak, lastDay, currentDay, lastHistorySize, lastStreakSize;
     private boolean firstTime;
-    private List<Task> tasks, history;
+    private List<Task> tasks, history, broughtBackHistory;
     private ListView taskList;
     private ArrayAdapter<Task> adapter;
     public static final String EXTRA_NAME = "REMIND";
@@ -94,8 +95,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 checkBoxes.get(0).setVisibility(View.VISIBLE);
             }
 
-            if (history == null)
+            if (history == null) {
                 initHistoryList();
+            }
+            if (broughtBackHistory != null) {
+                tasks.addAll(broughtBackHistory);
+                broughtBackHistory = null;
+            }
 
         Log.d("tasklist", "onCreate: taskList = " + taskList);
         adapter = new ArrayAdapter<Task>(this, R.layout.task, tasks);
@@ -123,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             newTask = null;
             adapter.notifyDataSetChanged();
         }
-        for (int i = 0; i < tasks.size(); i++) {
+        for (int i = 0; i < tasks.size() && i < 8; i++) {
             checkBoxes.get(i).setVisibility(View.VISIBLE);
             checkBoxes.get(i).setChecked(tasks.get(i).isDone());
         }
@@ -138,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent i = new Intent(MainActivity.this, History.class);
                 i.putExtra("history", (ArrayList<Task>) history);
                 i.putExtra("tasks", (ArrayList<Task>) tasks);
-                startActivity(i);
+                startActivityForResult(i, HISTORY_REQUEST);
                 break;
         }
     }
@@ -357,6 +363,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    }
                 }
             }
+            break;
+            case HISTORY_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    //add a created task with the data from NewTaskActivity
+                    broughtBackHistory = data.getParcelableArrayListExtra("history!");
+                }
         }
 
     }
