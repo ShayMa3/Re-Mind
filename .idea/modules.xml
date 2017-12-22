@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Re-Mind_Project.iml" filepath="$PROJECT_DIR$/Re-Mind_Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ReMindMainScreen.iml" filepath="$PROJECT_DIR$/ReMindMainScreen.iml" />
       <module fileurl="file://C:\Users\sma51\Downloads\Re-Mind_Project-master\Re-Mind_Project\ReMindMainScreen.iml" filepath="C:\Users\sma51\Downloads\Re-Mind_Project-master\Re-Mind_Project\ReMindMainScreen.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
