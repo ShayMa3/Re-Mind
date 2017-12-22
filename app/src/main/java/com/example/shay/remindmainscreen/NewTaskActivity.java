@@ -33,7 +33,6 @@ public class NewTaskActivity extends AppCompatActivity implements View.OnClickLi
         taskNameEditText = (EditText) findViewById(R.id.edittext_task_name);
         taskDetailsEditText = (EditText) findViewById(R.id.edittext_task_details);
         doDateEditText = (EditText) findViewById(R.id.edittext_do_date);
-
     }
 
     public void setOnClickListeners(){
