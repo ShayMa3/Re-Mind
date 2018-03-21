@@ -12,6 +12,7 @@ public class Task implements Parcelable {
     private String description;
     private String date;
     private String availability;
+    private boolean isDone;
 
     public boolean isDone() {
         return isDone;
@@ -20,8 +21,6 @@ public class Task implements Parcelable {
     public void setDone(boolean done) {
         isDone = done;
     }
-
-    private boolean isDone;
 
     public Task(String name, String description, String date, String availability, boolean isDone) {
         this.name = name;
